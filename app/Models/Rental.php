@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Database\Factories\RentalFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Rental
@@ -13,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int|null $apartment_id
  * @property int $price
- * @property string $begins_at
- * @property string $ends_at
+ * @property Carbon $begins_at
+ * @property Carbon $ends_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Apartment $apartment
@@ -49,9 +51,16 @@ class Rental extends Model
         'ends_at' => 'datetime',
     ];
 
+    public function priceTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->price_per_day * $this->begins_at->diffInDays($this->ends_at),
+        );
+    }
+
     public function apartment(): Model|BelongsTo
     {
-        return $this->belongsTo(Apartment::class)->create();
+        return $this->belongsTo(Apartment::class);
     }
 
     protected static function newFactory(): RentalFactory

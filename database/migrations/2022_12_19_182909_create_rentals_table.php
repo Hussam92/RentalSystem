@@ -17,7 +17,7 @@ return new class extends Migration
                 ->on('apartments')
                 ->nullOnDelete();
 
-            $table->integer('price_per_day');
+            $table->double('price_per_day');
             $table->dateTime('begins_at');
             $table->dateTime('ends_at');
             $table->timestamps();

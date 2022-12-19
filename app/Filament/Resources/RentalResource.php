@@ -6,10 +6,12 @@ use App\Filament\Resources\RentalResource\Pages;
 use App\Models\Apartment;
 use App\Models\Rental;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput\Mask;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 
 class RentalResource extends Resource
 {
@@ -25,7 +27,16 @@ class RentalResource extends Resource
                     ->label('Apartment')
                     ->options(Apartment::all()->mapWithKeys(fn (Apartment $apartment) => [$apartment->id => $apartment->__toString()]))
                     ->searchable(),
-                Forms\Components\TextInput::make('price_per_day')
+                Forms\Components\TextInput::make('price_per_day')->mask(fn (Mask $mask) => $mask
+                    ->patternBlocks([
+                        'money' => fn (Mask $mask) => $mask
+                            ->numeric()
+                            ->thousandsSeparator('.')
+                            ->decimalSeparator(',')
+                            ->normalizeZeros(),
+                    ])
+                    ->pattern('€ money'),
+                )->numeric()
                     ->required(),
                 Forms\Components\DatePicker::make('begins_at')
                     ->required(),
@@ -38,19 +49,17 @@ class RentalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('apartment_id'),
-                Tables\Columns\TextColumn::make('price_per_day'),
+                Tables\Columns\TextColumn::make('apartment')->label('Apartment'),
                 Tables\Columns\TextColumn::make('begins_at')
-                    ->dateTime(),
+                    ->date(),
                 Tables\Columns\TextColumn::make('ends_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                    ->date(),
+                Tables\Columns\TextColumn::make('price_per_day')->money('EUR', true),
+                Tables\Columns\TextColumn::make('price_total')->money('EUR', true),
             ])
             ->filters([
-                //
+                SelectFilter::make('apartment_id')
+                    ->options(Apartment::all()->mapWithKeys(fn (Apartment $apartment) => [$apartment->id => $apartment->__toString()])),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

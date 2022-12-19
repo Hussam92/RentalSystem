@@ -40,12 +40,12 @@ class ApartmentResource extends Resource
                 Tables\Columns\TextColumn::make('zip'),
                 Tables\Columns\TextColumn::make('bed_count'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->date(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                    ->date(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

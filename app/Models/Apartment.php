@@ -53,6 +53,6 @@ class Apartment extends Model
 
     public function __toString()
     {
-        return $this->name.' - '.$this->street.'  ('.$this->bed_count.' P)';
+        return $this->name.' - '.$this->street;
     }
 }
