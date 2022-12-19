@@ -49,8 +49,6 @@ class Rental extends Model
         'ends_at' => 'datetime',
     ];
 
-
-
     public function apartment(): Model|BelongsTo
     {
         return $this->belongsTo(Apartment::class)->create();
