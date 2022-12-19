@@ -1,0 +1,70 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: rentalapp
+    container_name: rental-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - rentalapp
+
+  db:
+    image: mysql:5.7.32
+    container_name: rentalapp-db
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT}:3306
+    command: --innodb_use_native_aio=0
+    environment:
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+      - ${MYSQL_DATA_DIR-./storage/data/mysql}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR-./storage/logs/mysql}:/var/log/mysql
+    networks:
+      - rentalapp
+
+  nginx:
+    image: nginx:alpine
+    container_name: rentalapp-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d/
+    networks:
+      - rentalapp
+  redis:
+    image: redis:latest
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./docker/redis:/data
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - rentalapp
+    healthcheck:
+      test: [ "CMD","redis-cli","ping" ]
+      interval: 600s
+      timeout: 10s
+      retries: 5
+
+networks:
+  rentalapp:
+    driver: bridge
