@@ -12,13 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Collection;
 
 class RentalResource extends Resource
 {
     protected static ?string $model = Rental::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
     public static function form(Form $form): Form
     {
@@ -50,7 +52,7 @@ class RentalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('apartment.name')->label('Apartment'),
+                Tables\Columns\TextColumn::make('apartment.name')->label(__('models.apartment.title')),
                 Tables\Columns\TextColumn::make('begins_at')
                     ->date(),
                 Tables\Columns\TextColumn::make('ends_at')
@@ -72,6 +74,14 @@ class RentalResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                BulkAction::make('download-bulk')
+                    ->icon('heroicon-s-download')
+                    ->color('secondary')
+                    ->requiresConfirmation(false)
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function (Collection $rentals) {
+                        \Log::error('NUMBER OF RENTALS = '.$rentals->count());
+                    }),
             ]);
     }
 
@@ -88,6 +98,7 @@ class RentalResource extends Resource
             'index' => Pages\ListRentals::route('/'),
             'create' => Pages\CreateRental::route('/create'),
             'edit' => Pages\EditRental::route('/{record}/edit'),
+            'view' => Pages\ViewRental::route('/{record}'),
         ];
     }
 }

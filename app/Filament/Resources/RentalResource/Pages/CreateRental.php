@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRental extends CreateRecord
 {
     protected static string $resource = RentalResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->previousUrl;
+    }
 }

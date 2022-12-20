@@ -6,11 +6,7 @@ use App\Http\Requests\StoreRentalRequest;
 use App\Http\Requests\UpdateRentalRequest;
 use App\Invoices\RentalSingleInvoice;
 use App\Models\Rental;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
-use LaravelDaily\Invoices\Classes\Buyer;
-use LaravelDaily\Invoices\Classes\InvoiceItem;
-use LaravelDaily\Invoices\Facades\Invoice;
 
 class RentalController extends Controller
 {

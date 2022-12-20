@@ -14,7 +14,7 @@ class ApartmentResource extends Resource
 {
     protected static ?string $model = Apartment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-key';
 
     public static function form(Form $form): Form
     {
@@ -69,5 +69,10 @@ class ApartmentResource extends Resource
             'create' => Pages\CreateApartment::route('/create'),
             'edit' => Pages\EditApartment::route('/{record}/edit'),
         ];
+    }
+
+    public static function getTranslatableLocales(): array
+    {
+        return ['de', 'en', 'es'];
     }
 }
