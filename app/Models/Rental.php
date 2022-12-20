@@ -14,7 +14,8 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int|null $apartment_id
- * @property int $price
+ * @property float $price_per_day
+ * @property float $price_total
  * @property Carbon $begins_at
  * @property Carbon $ends_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -34,8 +35,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rental whereUpdatedAt($value)
  * @mixin \Eloquent
  *
- * @property int $price_per_day
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Rental wherePricePerDay($value)
  */
 class Rental extends Model
@@ -51,10 +50,17 @@ class Rental extends Model
         'ends_at' => 'datetime',
     ];
 
+    public function daysCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->begins_at->diffInDays($this->ends_at),
+        );
+    }
+
     public function priceTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->price_per_day * $this->begins_at->diffInDays($this->ends_at),
+            get: fn () => $this->price_per_day * $this->daysCount,
         );
     }
 

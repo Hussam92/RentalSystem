@@ -12,6 +12,7 @@ return [
         'pay_until_days' => 1,
     ],
 
+    'tax_included' => true,
     'serial_number' => [
         'series' => 'AA',
         'sequence' => 1,

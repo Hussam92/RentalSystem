@@ -86,8 +86,19 @@ class RentalController extends Controller
         //
     }
 
+    /**
+     * @throws \Exception
+     */
     public function invoice(Rental $rental): Response
     {
         return (new RentalSingleInvoice)($rental)->stream();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function download(Rental $rental): Response
+    {
+        return (new RentalSingleInvoice)($rental)->download();
     }
 }

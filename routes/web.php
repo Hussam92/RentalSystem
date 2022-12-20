@@ -24,3 +24,6 @@ Route::get('test', function () {
 
 Route::get('rentals/{rental}/invoice', [RentalController::class, 'invoice'])
     ->name('get.rentals.single.invoice');
+
+Route::get('rentals/{rental}/download', [RentalController::class, 'download'])
+    ->name('get.rentals.single.download');

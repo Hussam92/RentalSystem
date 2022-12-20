@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "ext-curl": "*",
         "ext-intl": "*",
+        "ext-zip": "*",
         "barryvdh/laravel-dompdf": "^2.0",
         "filament/filament": "^2.0",
         "filament/tables": "^2.0",
@@ -17,7 +18,8 @@
         "laravel/tinker": "^2.7",
         "laraveldaily/laravel-invoices": "^3.0",
         "maatwebsite/excel": "^3.1",
-        "psr/simple-cache": "^2.0"
+        "psr/simple-cache": "^2.0",
+        "spipu/html2pdf": "^5.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

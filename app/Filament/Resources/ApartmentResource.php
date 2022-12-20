@@ -21,13 +21,17 @@ class ApartmentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('street')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('zip')
+                    ->label('Name')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('bed_count')
+                    ->label('Anzahl Betten')
                     ->required(),
+                Forms\Components\TextInput::make('street')
+                    ->label('Strasse')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('zip')
+                    ->label('PLZ')
+                    ->maxLength(255),
             ]);
     }
 
@@ -35,14 +39,14 @@ class ApartmentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('street'),
-                Tables\Columns\TextColumn::make('zip'),
-                Tables\Columns\TextColumn::make('bed_count'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->date(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->date(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Name'),
+                Tables\Columns\TextColumn::make('street')
+                    ->label('Strasse'),
+                Tables\Columns\TextColumn::make('zip')
+                    ->label('PLZ'),
+                Tables\Columns\TextColumn::make('bed_count')
+                    ->label('Anzahl Betten'),
             ])
             ->filters([
 
@@ -68,6 +72,7 @@ class ApartmentResource extends Resource
             'index' => Pages\ListApartments::route('/'),
             'create' => Pages\CreateApartment::route('/create'),
             'edit' => Pages\EditApartment::route('/{record}/edit'),
+            'view' => Pages\ViewApartment::route('/{record}'),
         ];
     }
 
