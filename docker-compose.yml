@@ -7,18 +7,18 @@ services:
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: rentalapp
-    container_name: rental-app
+    image: bookingapp
+    container_name: booking-app
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
       - ./:/var/www
     networks:
-      - rentalapp
+      - bookingapp
 
   db:
     image: mysql:5.7.32
-    container_name: rentalapp-db
+    container_name: bookingapp-db
     restart: unless-stopped
     ports:
       - ${DB_PORT}:3306
@@ -36,11 +36,11 @@ services:
       - ${MYSQL_DATA_DIR-./storage/data/mysql}:/var/lib/mysql
       - ${MYSQL_LOG_DIR-./storage/logs/mysql}:/var/log/mysql
     networks:
-      - rentalapp
+      - bookingapp
 
   nginx:
     image: nginx:alpine
-    container_name: rentalapp-nginx
+    container_name: bookingapp-nginx
     restart: unless-stopped
     ports:
       - 8000:80
@@ -48,7 +48,7 @@ services:
       - ./:/var/www
       - ./docker/nginx:/etc/nginx/conf.d/
     networks:
-      - rentalapp
+      - bookingapp
   redis:
     image: redis:latest
     command: redis-server --requirepass ${REDIS_PASSWORD}
@@ -58,7 +58,7 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
     networks:
-      - rentalapp
+      - bookingapp
     healthcheck:
       test: [ "CMD","redis-cli","ping" ]
       interval: 600s
@@ -66,5 +66,5 @@ services:
       retries: 5
 
 networks:
-  rentalapp:
+  bookingapp:
     driver: bridge

@@ -14,11 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $street
  * @property string $zip
+ * @property string $status
  * @property int $bed_count
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rental[] $rents
- * @property-read int|null $rents_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Booking[] $bookings
+ * @property-read int|null $bookings_count
  *
  * @method static \Database\Factories\ApartmentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Apartment newModelQuery()
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Apartment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Apartment whereZip($value)
  * @mixin \Eloquent
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Apartment whereStatus($value)
  */
 class Apartment extends Model
 {
@@ -41,9 +44,9 @@ class Apartment extends Model
 
     protected $hidden = [];
 
-    public function rents(): HasMany
+    public function bookings(): HasMany
     {
-        return $this->hasMany(Rental::class);
+        return $this->hasMany(Booking::class);
     }
 
     protected static function newFactory(): ApartmentFactory

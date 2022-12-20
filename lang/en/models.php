@@ -7,11 +7,11 @@ return [
         'plural' => 'apartments',
         'nav-title' => 'Apartments',
     ],
-    'rental' => [
-        'title' => 'Rental',
-        'singular' => 'rental',
-        'plural' => 'rentals',
-        'nav-title' => 'Rentals',
+    'booking' => [
+        'title' => 'Booking',
+        'singular' => 'booking',
+        'plural' => 'bookings',
+        'nav-title' => 'Bookings',
         'begins_at' => [
             'title' => 'Check-In',
             'singular' => 'check-in',

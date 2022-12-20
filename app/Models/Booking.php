@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\RentalFactory;
+use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Models\Rental
+ * App\Models\Booking
  *
  * @property int $id
  * @property int|null $apartment_id
@@ -22,22 +22,22 @@ use Illuminate\Support\Carbon;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Apartment $apartment
  *
- * @method static \Database\Factories\RentalFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Rental newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Rental query()
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereApartmentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereBeginsAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereEndsAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rental whereUpdatedAt($value)
+ * @method static \Database\Factories\BookingFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereApartmentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereBeginsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereUpdatedAt($value)
  * @mixin \Eloquent
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Rental wherePricePerDay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking wherePricePerDay($value)
  */
-class Rental extends Model
+class Booking extends Model
 {
     use HasFactory;
 
@@ -69,8 +69,8 @@ class Rental extends Model
         return $this->belongsTo(Apartment::class);
     }
 
-    protected static function newFactory(): RentalFactory
+    protected static function newFactory(): BookingFactory
     {
-        return RentalFactory::new();
+        return BookingFactory::new();
     }
 }

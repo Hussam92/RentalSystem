@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('street')->nullable();
             $table->string('zip')->nullable();
             $table->integer('bed_count')->default(1);
+            $table->string('status')->default('available');
             $table->timestamps();
         });
     }

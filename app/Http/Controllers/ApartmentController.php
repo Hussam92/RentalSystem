@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreApartmentRequest;
 use App\Http\Requests\UpdateApartmentRequest;
 use App\Models\Apartment;
+use App\Models\Enums\ApartmentState;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class ApartmentController extends Controller
 {
@@ -82,5 +86,18 @@ class ApartmentController extends Controller
     public function destroy(Apartment $apartment)
     {
         //
+    }
+
+    public function available(Apartment $apartment): Response|Application|ResponseFactory
+    {
+        if ($apartment->status !== ApartmentState::PREPARING->value) {
+            return response(__('Invalid Apartment'), Response::HTTP_BAD_REQUEST);
+        }
+
+        $apartment->update([
+            'status' => ApartmentState::AVAILABLE->value,
+        ]);
+
+        return response(__('Apartment available'), Response::HTTP_ACCEPTED);
     }
 }

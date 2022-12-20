@@ -2,7 +2,7 @@
 
 namespace App\Filament\Actions;
 
-use App\Models\Rental;
+use App\Models\Booking;
 use Carbon\Carbon;
 use Filament\Support\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
@@ -12,7 +12,7 @@ use LaravelDaily\Invoices\Classes\Buyer;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
 use LaravelDaily\Invoices\Facades\Invoice;
 
-class ExportRentAction extends Action
+class ExportBookingAction extends Action
 {
     use CanCustomizeProcess;
 
@@ -49,7 +49,7 @@ class ExportRentAction extends Action
         //});
 
         $this->action(function () {
-            $this->process(static function (Rental $record) {
+            $this->process(static function (Booking $record) {
                 $invoice = Invoice::make()->buyer(new Buyer([
                     'name' => 'Gast',
                 ]));

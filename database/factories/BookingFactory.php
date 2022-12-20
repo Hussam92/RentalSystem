@@ -3,13 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Apartment;
-use App\Models\Rental;
+use App\Models\Booking;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Rental>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Booking>
  */
-class RentalFactory extends Factory
+class BookingFactory extends Factory
 {
     public function definition(): array
     {
@@ -21,14 +21,14 @@ class RentalFactory extends Factory
         ];
     }
 
-    public function configure(): RentalFactory
+    public function configure(): BookingFactory
     {
-        return $this->afterMaking(function (Rental $rental) {
-            if (! $rental->apartment_id) {
+        return $this->afterMaking(function (Booking $booking) {
+            if (! $booking->apartment_id) {
                 $apartments = Apartment::all();
-                $rental->apartment_id = $apartments->count() ? $apartments->random() : Apartment::factory()->create()->id;
+                $booking->apartment_id = $apartments->count() ? $apartments->random() : Apartment::factory()->create()->id;
             }
-        })->afterCreating(function (Rental $rental) {
+        })->afterCreating(function (Booking $booking) {
             //
         });
     }

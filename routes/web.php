@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\RentalController;
+use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,8 +23,11 @@ Route::get('test', function () {
     return 'Hello World';
 });
 
-Route::get('rentals/{rental}/invoice', [RentalController::class, 'invoice'])
-    ->name('get.rentals.single.invoice');
+Route::get('bookings/{booking}/invoice', [BookingController::class, 'invoice'])
+    ->name('get.bookings.single.invoice');
 
-Route::get('rentals/{rental}/download', [RentalController::class, 'download'])
-    ->name('get.rentals.single.download');
+Route::get('bookings/{booking}/download', [BookingController::class, 'download'])
+    ->name('get.bookings.single.download');
+
+Route::post('apartments/{apartment}/available', [ApartmentController::class, 'available'])
+    ->name('post.apartments.single.available');

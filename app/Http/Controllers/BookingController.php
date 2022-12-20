@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRentalRequest;
-use App\Http\Requests\UpdateRentalRequest;
-use App\Invoices\RentalSingleInvoice;
-use App\Models\Rental;
+use App\Http\Requests\StoreBookingRequest;
+use App\Http\Requests\UpdateBookingRequest;
+use App\Invoices\BookingSingleInvoice;
+use App\Models\Booking;
 use Illuminate\Http\Response;
 
-class RentalController extends Controller
+class BookingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,10 +33,10 @@ class RentalController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreRentalRequest  $request
+     * @param  \App\Http\Requests\StoreBookingRequest  $request
      * @return Response
      */
-    public function store(StoreRentalRequest $request)
+    public function store(StoreBookingRequest $request)
     {
         //
     }
@@ -44,10 +44,10 @@ class RentalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Rental  $rental
+     * @param  \App\Models\Booking  $booking
      * @return Response
      */
-    public function show(Rental $rental)
+    public function show(Booking $booking)
     {
         //
     }
@@ -55,10 +55,10 @@ class RentalController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Rental  $rental
+     * @param  \App\Models\Booking  $booking
      * @return Response
      */
-    public function edit(Rental $rental)
+    public function edit(Booking $booking)
     {
         //
     }
@@ -66,11 +66,11 @@ class RentalController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateRentalRequest  $request
-     * @param  \App\Models\Rental  $rental
+     * @param  \App\Http\Requests\UpdateBookingRequest  $request
+     * @param  \App\Models\Booking  $booking
      * @return Response
      */
-    public function update(UpdateRentalRequest $request, Rental $rental)
+    public function update(UpdateBookingRequest $request, Booking $booking)
     {
         //
     }
@@ -78,10 +78,10 @@ class RentalController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Rental  $rental
+     * @param  \App\Models\Booking  $booking
      * @return Response
      */
-    public function destroy(Rental $rental)
+    public function destroy(Booking $booking)
     {
         //
     }
@@ -89,16 +89,16 @@ class RentalController extends Controller
     /**
      * @throws \Exception
      */
-    public function invoice(Rental $rental): Response
+    public function invoice(Booking $booking): Response
     {
-        return (new RentalSingleInvoice)($rental)->stream();
+        return (new BookingSingleInvoice)($booking)->stream();
     }
 
     /**
      * @throws \Exception
      */
-    public function download(Rental $rental): Response
+    public function download(Booking $booking): Response
     {
-        return (new RentalSingleInvoice)($rental)->download();
+        return (new BookingSingleInvoice)($booking)->download();
     }
 }

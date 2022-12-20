@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Enums\ApartmentState;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,6 +17,7 @@ class ApartmentFactory extends Factory
             'street' => fake()->streetName,
             'zip' => fake()->regexify('[0-9]{5}'),
             'bed_count' => fake()->numberBetween(1, 5),
+            'status' => ApartmentState::AVAILABLE->value,
         ];
     }
 }

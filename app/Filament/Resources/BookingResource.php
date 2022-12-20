@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RentalResource\Pages;
-use App\Invoices\RentalSingleInvoice;
+use App\Filament\Resources\BookingResource\Pages;
+use App\Invoices\BookingSingleInvoice;
 use App\Models\Apartment;
-use App\Models\Rental;
+use App\Models\Booking;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput\Mask;
@@ -19,9 +19,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class RentalResource extends Resource
+class BookingResource extends Resource
 {
-    protected static ?string $model = Rental::class;
+    protected static ?string $model = Booking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
@@ -30,7 +30,8 @@ class RentalResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('apartment_id')
-                    ->label('Apartment')
+                    ->label(__('Apartment'))
+                    ->translateLabel()
                     ->options(Apartment::query()->orderBy('bed_count', 'DESC')->get()->mapWithKeys(fn (Apartment $apartment) => [
                         $apartment->id => $apartment->__toString()." ($apartment->bed_count P)",
                     ]))
@@ -62,7 +63,7 @@ class RentalResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('apartment.name')
-                    ->label('Wohnung')
+                    ->label(__('Apartment'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('begins_at')
                     ->label('Check-In')
@@ -104,7 +105,7 @@ class RentalResource extends Resource
                 Filter::make('month')
                     ->form([
                         Forms\Components\Select::make('begins_at')->label('Monat')->options(
-                            Rental::get()->sortBy('begins_at')->pluck('begins_at')
+                            Booking::get()->sortBy('begins_at')->pluck('begins_at')
                                 ->mapWithKeys(function (Carbon $carbon) {
                                     $newCarbon = $carbon->clone()->startOfMonth();
                                     $filter = $newCarbon->format('Y-m');
@@ -124,7 +125,7 @@ class RentalResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->openUrlInNewTab(),
                 Action::make('download')
-                    ->url(fn (Rental $record): string => route('get.rentals.single.invoice', $record))
+                    ->url(fn (Booking $record): string => route('get.bookings.single.invoice', $record))
                     ->icon('heroicon-s-download')
                     ->color('secondary')
                     ->openUrlInNewTab(),
@@ -140,9 +141,9 @@ class RentalResource extends Resource
                         $filename = 'mieten_export_'.now()->format('Y-m-d').'.zip';
                         $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
                         foreach ($records as $record) {
-                            $invoice = (new RentalSingleInvoice)($record)->render()->save();
+                            $invoice = (new BookingSingleInvoice)($record)->render()->save();
                             $name = $invoice->filename;
-                            $full_file = storage_path('app/'.$name);
+                            $full_file = \Storage::path($name);
                             $archive->addFile($full_file, $name);
                         }
                         $archive->close();
@@ -164,10 +165,10 @@ class RentalResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRentals::route('/'),
-            'create' => Pages\CreateRental::route('/create'),
-            'edit' => Pages\EditRental::route('/{record}/edit'),
-            'view' => Pages\ViewRental::route('/{record}'),
+            'index' => Pages\ListBookings::route('/'),
+            'create' => Pages\CreateBooking::route('/create'),
+            'edit' => Pages\EditBooking::route('/{record}/edit'),
+            'view' => Pages\ViewBooking::route('/{record}'),
         ];
     }
 }

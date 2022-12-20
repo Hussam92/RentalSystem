@@ -6,7 +6,7 @@ use Filament\Facades\Filament;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
-    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static ?string $navigationIcon = 'heroicon-o-template';
 
     protected static ?int $navigationSort = -2;
 

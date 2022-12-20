@@ -4,11 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ApartmentResource\Pages;
 use App\Models\Apartment;
+use App\Models\Enums\ApartmentState;
+use App\Mutators\ApartmentStatusMutator;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class ApartmentResource extends Resource
 {
@@ -46,13 +51,52 @@ class ApartmentResource extends Resource
                 Tables\Columns\TextColumn::make('zip')
                     ->label('PLZ'),
                 Tables\Columns\TextColumn::make('bed_count')
-                    ->label('Anzahl Betten'),
+                    ->label('Betten'),
+                BadgeColumn::make('status')
+                    ->translateLabel()
+                    ->enum(
+                        collect(array_column(ApartmentState::cases(), 'value'))
+                            ->mapWithKeys(fn ($state) => [$state => __($state)])
+                            ->toArray()
+                    )
+                    ->colors([
+                        'primary',
+                        'success' => ApartmentState::AVAILABLE->value,
+                        'secondary' => ApartmentState::BOOKED->value,
+                        'warning' => ApartmentState::PREPARING->value,
+                        'danger' => ApartmentState::RENOVATION->value,
+                    ])
+                    ->icons([
+                        'primary',
+                        'heroicon-o-shield-check' => ApartmentState::AVAILABLE->value,
+                        'heroicon-o-key' => ApartmentState::BOOKED->value,
+                        'heroicon-o-hand' => ApartmentState::PREPARING->value,
+                        'heroicon-o-exclamation' => ApartmentState::RENOVATION->value,
+                    ]),
             ])
             ->filters([
-
+                SelectFilter::make('status')
+                    ->options(collect(array_column(ApartmentState::cases(), 'value'))
+                        ->mapWithKeys(fn ($state) => [$state => __($state)])
+                        ->toArray())
+                    ->translateLabel(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Action::make('available')
+                    ->label(__('available'))
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-right')
+                    ->visible(fn (Apartment $record): bool => ApartmentStatusMutator::canToggle(ApartmentState::fromName($record->status), ApartmentState::AVAILABLE))
+                    ->action(fn (Apartment $record): string => __(ApartmentStatusMutator::available($record)->value)),
+                Action::make('book')
+                    ->label(__('book'))
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-right')
+                    ->visible(fn (Apartment $record): bool => ApartmentStatusMutator::canToggle(ApartmentState::fromName($record->status), ApartmentState::BOOKED))
+                    ->url(fn (Apartment $record) => BookingResource::getUrl('create'))
+                    ->openUrlInNewTab(),
+                Tables\Actions\EditAction::make()
+                    ->color('secondary'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

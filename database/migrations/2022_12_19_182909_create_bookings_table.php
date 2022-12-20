@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('rentals', function (Blueprint $table) {
+        Schema::create('bookings', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('apartment_id')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('rentals');
+        Schema::dropIfExists('bookings');
     }
 };

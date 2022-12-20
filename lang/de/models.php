@@ -12,7 +12,7 @@ return [
         'city' => 'Stadt',
         'bed_count' => 'Anzahl Betten',
     ],
-    'rental' => [
+    'booking' => [
         'title' => 'Vermietung',
         'singular' => 'Vermietung',
         'plural' => 'Vermietungen',
