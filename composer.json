@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-curl": "*",
+        "ext-intl": "*",
         "barryvdh/laravel-dompdf": "^2.0",
         "filament/filament": "^2.0",
         "filament/tables": "^2.0",

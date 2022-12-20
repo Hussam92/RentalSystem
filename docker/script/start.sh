@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#
-# Copyright (c) 2021. This code is property of the Sdui GmbH.
-#
-
 checkAndMigrate() {
   for i in {30..0}; do
 			if php artisan CheckDatabaseConnection; then

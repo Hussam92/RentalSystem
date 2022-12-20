@@ -11,6 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 
 class RentalResource extends Resource
@@ -49,7 +50,7 @@ class RentalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('apartment')->label('Apartment'),
+                Tables\Columns\TextColumn::make('apartment.name')->label('Apartment'),
                 Tables\Columns\TextColumn::make('begins_at')
                     ->date(),
                 Tables\Columns\TextColumn::make('ends_at')
@@ -62,7 +63,12 @@ class RentalResource extends Resource
                     ->options(Apartment::all()->mapWithKeys(fn (Apartment $apartment) => [$apartment->id => $apartment->__toString()])),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->openUrlInNewTab(),
+                Action::make('download')
+                    ->url(fn (Rental $record): string => route('get.rentals.single.invoice', $record))
+                    ->icon('heroicon-s-download')
+                    ->color('secondary')
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

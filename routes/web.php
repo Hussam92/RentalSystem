@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('test', function () {
+    return 'Hello World';
+});
+
+Route::get('rentals/{rental}/invoice', [RentalController::class, 'invoice'])
+    ->name('get.rentals.single.invoice');
