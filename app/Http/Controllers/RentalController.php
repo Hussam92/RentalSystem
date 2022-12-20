@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRentalRequest;
 use App\Http\Requests\UpdateRentalRequest;
+use App\Invoices\RentalSingleInvoice;
 use App\Models\Rental;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -91,22 +92,6 @@ class RentalController extends Controller
 
     public function invoice(Rental $rental): Response
     {
-        $invoice = Invoice::make()->buyer(new Buyer([
-            'name' => 'Gast',
-        ]))->payUntilDays(0);
-
-        $apartment = $rental->apartment;
-        $title = sprintf('%s %s %s', $apartment->name, $apartment->street, $apartment->zip);
-
-        collect($rental->begins_at->daysUntil($rental->ends_at)->toArray())->map(function (Carbon $date) use ($invoice, $rental, $title) {
-            $invoiceItem = (new InvoiceItem())->title($title)
-                ->pricePerUnit($rental->price_per_day / 1.19)
-                ->units($date->format('d.m-Y'))
-                ->taxByPercent(19);
-
-            $invoice->addItem($invoiceItem);
-        });
-
-        return $invoice->stream();
+        return (new RentalSingleInvoice)($rental)->stream();
     }
 }
