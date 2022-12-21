@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ApartmentResource\Pages;
+use App\Filament\Resources\ApartmentResource\RelationManagers\BookingsRelationManager;
 use App\Models\Apartment;
 use App\Models\Enums\ApartmentState;
 use App\Mutators\ApartmentStatusMutator;
@@ -14,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Str;
 
 class ApartmentResource extends Resource
 {
@@ -83,18 +85,11 @@ class ApartmentResource extends Resource
             ])
             ->actions([
                 Action::make('available')
-                    ->label(__('available'))
+                    ->label(Str::ucfirst(__('available')))
                     ->color('success')
-                    ->icon('heroicon-o-arrow-right')
+                    ->icon('heroicon-o-badge-check')
                     ->visible(fn (Apartment $record): bool => ApartmentStatusMutator::canToggle(ApartmentState::fromName($record->status), ApartmentState::AVAILABLE))
                     ->action(fn (Apartment $record): string => __(ApartmentStatusMutator::available($record)->value)),
-                Action::make('book')
-                    ->label(__('book'))
-                    ->color('primary')
-                    ->icon('heroicon-o-arrow-right')
-                    ->visible(fn (Apartment $record): bool => ApartmentStatusMutator::canToggle(ApartmentState::fromName($record->status), ApartmentState::BOOKED))
-                    ->url(fn (Apartment $record) => BookingResource::getUrl('create'))
-                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make()
                     ->color('secondary'),
             ])
@@ -106,7 +101,7 @@ class ApartmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            BookingsRelationManager::class,
         ];
     }
 

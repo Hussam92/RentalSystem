@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\BookingObserver;
 use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,9 +16,12 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int|null $apartment_id
  * @property float $price_per_day
- * @property float $price_total
  * @property Carbon $begins_at
  * @property Carbon $ends_at
+ * @property Carbon $paid_at
+ * @property-read bool $is_paid
+ * @property-read int days_count
+ * @property-read float $price_total
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Apartment $apartment
@@ -36,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Booking wherePricePerDay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking wherePaidAt($value)
  */
 class Booking extends Model
 {
@@ -48,7 +53,15 @@ class Booking extends Model
     protected $casts = [
         'begins_at' => 'datetime',
         'ends_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(BookingObserver::class);
+    }
 
     public function daysCount(): Attribute
     {
@@ -60,7 +73,14 @@ class Booking extends Model
     public function priceTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->price_per_day * $this->daysCount,
+            get: fn () => $this->price_per_day * $this->days_count,
+        );
+    }
+
+    public function isPaid(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (bool) $this->paid_at
         );
     }
 

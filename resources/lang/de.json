@@ -1,5 +1,6 @@
 {
     "available": "verfügbar",
+    "book": "buchen",
     "booked": "vermietet",
     "preparing": "in Arbeit",
     "renovation":  "renovierung",
@@ -7,5 +8,13 @@
     "Apartment": "Wohnung",
     "apartment": "Wohnung",
     "Booking": "Vermietung",
-    "Bookings": "Vermietungen"
+    "Bookings": "Vermietungen",
+    "paid": "Bezahlt",
+    "received payment": "Zahlung eingegangen",
+    "The booking was marked as paid": "Die Buchung wurde als bezahlt verbucht",
+    "From - To: ": "Von - Bis: ",
+    "View booking": "Buchung ansehen",
+    "Increase": "Zuwachs",
+    "Decrease": "Rückgang",
+    "Bookings this year": "Buchungen dieses Jahr"
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('price_per_day');
             $table->dateTime('begins_at');
             $table->dateTime('ends_at');
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }

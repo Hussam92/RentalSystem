@@ -1,45 +1,40 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ApartmentResource\RelationManagers;
 
-use App\Filament\Resources\BookingResource\Pages;
 use App\Invoices\BookingSingleInvoice;
 use App\Models\Apartment;
 use App\Models\Booking;
-use App\Models\Enums\ApartmentState;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput\Mask;
 use Filament\Resources\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class BookingResource extends Resource
+class BookingsRelationManager extends RelationManager
 {
-    protected static ?string $model = Booking::class;
+    protected static string $relationship = 'bookings';
 
-    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static ?string $recordTitleAttribute = 'apartment_id';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('apartment_id')
-                    ->label(__('Apartment'))
-                    ->translateLabel()
-                    ->options(Apartment::query()->where('status', ApartmentState::AVAILABLE->value)
-                        ->orderBy('bed_count', 'DESC')->get()->mapWithKeys(fn (Apartment $apartment) => [
-                            $apartment->id => $apartment->__toString()." ($apartment->bed_count P)",
-                        ])
-                    )
-                    ->searchable(),
+                Forms\Components\DatePicker::make('begins_at')
+                    ->label('Check-in')
+                    ->required(),
+                Forms\Components\DatePicker::make('ends_at')
+                    ->label('Check-out')
+                    ->after('begins_at')
+                    ->required(),
                 Forms\Components\TextInput::make('price_per_day')->mask(fn (Mask $mask) => $mask
                     ->patternBlocks([
                         'money' => fn (Mask $mask) => $mask
@@ -51,13 +46,6 @@ class BookingResource extends Resource
                     ->pattern('€ money'),
                 )->numeric()
                     ->required(),
-                Forms\Components\DatePicker::make('begins_at')
-                    ->label('Check-in')
-                    ->required(),
-                Forms\Components\DatePicker::make('ends_at')
-                    ->label('Check-out')
-                    ->after('begins_at')
-                    ->required(),
             ]);
     }
 
@@ -66,9 +54,6 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('apartment.name')
-                    ->label(__('Apartment'))
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('begins_at')
                     ->label('Check-In')
                     ->date()
@@ -85,7 +70,6 @@ class BookingResource extends Resource
                     ->label('Gesamt')
                     ->money('EUR', true),
             ])
-            ->defaultSort('begins_at', 'desc')
             ->filters([
                 SelectFilter::make('apartment_id')
                     ->label('Wohnung')
@@ -126,13 +110,10 @@ class BookingResource extends Resource
                             );
                     }),
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
-                Tables\Actions\EditAction::make()->openUrlInNewTab(),
-                Action::make('download')
-                    ->url(fn (Booking $record): string => route('get.bookings.single.invoice', $record))
-                    ->icon('heroicon-s-download')
-                    ->color('secondary')
-                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -157,22 +138,5 @@ class BookingResource extends Resource
                     ->requiresConfirmation(false)
                     ->deselectRecordsAfterCompletion(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListBookings::route('/'),
-            'create' => Pages\CreateBooking::route('/create'),
-            'edit' => Pages\EditBooking::route('/{record}/edit'),
-            'view' => Pages\ViewBooking::route('/{record}'),
-        ];
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\BookingResource\Pages;
 
 use App\Filament\Resources\BookingResource;
+use App\Models\Booking;
+use Closure;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -17,8 +19,8 @@ class ListBookings extends ListRecords
         ];
     }
 
-    protected function getTableRecordsPerPageSelectOptions(): array
+    protected function getTableRecordUrlUsing(): ?Closure
     {
-        return [10, 25, 50, 100];
+        return fn (Booking $record): string => route('filament.resources.bookings.view', ['record' => $record]);
     }
 }
